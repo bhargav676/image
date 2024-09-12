@@ -17,14 +17,14 @@ const App = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", image);
-    await axios.post("http://localhost:4000/uploadimage", formData, {
+    await axios.post("https://image-omega-jade.vercel.app/uploadimage", formData, {
       headers: { "Content-Type": "multipart/form-data" }
     });
     getImages();
   };
 
   const getImages = async () => {
-    const result = await axios.get("http://localhost:4000/getimage");
+    const result = await axios.get("https://image-omega-jade.vercel.app/getimage");
     setAllImage(result.data.data || []);
   };
 
@@ -39,7 +39,7 @@ const App = () => {
           data && data.image ? (
             <img
               key={index}
-              src={`http://localhost:4000/images/${data.image}`}
+              src={`https://image-omega-jade.vercel.app/images/${data.image}`}
               alt=" "
               style={{ width: '200px', height: 'auto', margin: '10px' }}
             />
