@@ -7,7 +7,7 @@ const path = require('path');
 const Images = require('./model');
 
 app.use(cors());
-app.use(express.json()); // If you need to parse JSON bodies
+app.use(express.json()); 
 app.use('/images', express.static(path.join(__dirname, '../client/src/images')));
 
 app.listen(4000, () => {
