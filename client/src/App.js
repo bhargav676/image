@@ -18,7 +18,7 @@ const App = () => {
     const formData = new FormData();
     formData.append("image", image);
     try {
-      await axios.post("http://localhost:4000/uploadimage", formData, {
+      await axios.post("https://image-omega-jade.vercel.app/uploadimage", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       getImages();
@@ -29,7 +29,7 @@ const App = () => {
 
   const getImages = async () => {
     try {
-      const result = await axios.get("http://localhost:4000/getimage");
+      const result = await axios.get("https://image-omega-jade.vercel.app/getimage");
       setAllImage(result.data.data || []);
     } catch (error) {
       console.error("Error fetching images:", error);
