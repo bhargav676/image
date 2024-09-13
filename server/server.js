@@ -4,17 +4,28 @@ const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs'); 
 const Images = require('./model');
 
 app.use(cors());
-app.use(express.json()); // If you need to parse JSON bodies
-app.use('/images', express.static(path.join(__dirname, '../client/src/images')));
+app.use(express.json()); 
+
+// Define the directory for storing uploaded images
+const uploadDir = path.join(__dirname, 'uploads');
+
+// Ensure the 'uploads' folder exists
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Serve images from the 'uploads' folder
+app.use('/images', express.static(uploadDir));
 
 app.listen(4000, () => {
     console.log("Server started on port 4000");
 });
 
-mongoose.connect('mongodb+srv://322103312083:951509290@cluster0.8iess.mongodb.net/movie')
+mongoose.connect("mongodb+srv://322103312083:951509290@cluster0.8iess.mongodb.net/movie")
     .then(() => {
         console.log("MongoDB connected");
     })
@@ -22,9 +33,10 @@ mongoose.connect('mongodb+srv://322103312083:951509290@cluster0.8iess.mongodb.ne
         console.error("Error connecting to database:", err);
     });
 
+// Define storage for Multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../client/src/images'));
+        cb(null, uploadDir); // Save images to the 'uploads' folder
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now();
@@ -34,6 +46,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+// Endpoint to upload an image
 app.post('/uploadimage', upload.single('image'), async (req, res) => {
     const imagename = req.file.filename;
     try {
@@ -45,6 +58,7 @@ app.post('/uploadimage', upload.single('image'), async (req, res) => {
     }
 });
 
+// Endpoint to fetch images
 app.get('/getimage', async (req, res) => {
     try {
         const data = await Images.find({});
