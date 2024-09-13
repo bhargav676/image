@@ -17,15 +17,23 @@ const App = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("image", image);
-    await axios.post("http://localhost:4000/uploadimage", formData, {
-      headers: { "Content-Type": "multipart/form-data" }
-    });
-    getImages();
+    try {
+      await axios.post("http://localhost:4000/uploadimage", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      getImages();
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
 
   const getImages = async () => {
-    const result = await axios.get("http://localhost:4000/getimage");
-    setAllImage(result.data.data || []);
+    try {
+      const result = await axios.get("http://localhost:4000/getimage");
+      setAllImage(result.data.data || []);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
   };
 
   return (
@@ -39,7 +47,7 @@ const App = () => {
           data && data.image ? (
             <img
               key={index}
-              src={`http://localhost:4000/images/${data.image}`}
+              src={data.image}
               alt=""
               style={{ width: '200px', height: 'auto', margin: '10px' }}
             />
